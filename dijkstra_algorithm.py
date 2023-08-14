@@ -27,8 +27,8 @@ def createNodes(width, height, quantity, radius, color):
     for iterator in range(quantity):
         while True:
             try:
-                x = random.randint(2 * radius, width - 2 * radius)
-                y = random.randint(radius, height - 2 * radius)
+                x = random.randint(width / 3 + 2 * radius, (4 * width / 3) - 2 * radius)
+                y = random.randint(height / 3 + radius, (4 * height / 3) - 2 * radius)
                 node = Node(iterator + 1, x, y, radius, color)
                 if not node.detectCollision(nodes):
                     break
@@ -155,7 +155,8 @@ def lesser_route(id_node_final, current_path=None, all_paths=None):
 
     return all_paths
 
-def view_routes(id_node_final):
+def view_routes(id_node_final,width, height):
+    font_size = 40
     routes = lesser_route(id_node_final)
     for route in routes:
         route.reverse()
@@ -166,13 +167,13 @@ def view_routes(id_node_final):
         if distance < min_distance:
             min_distance = distance
 
-    print("Rutas con distancia mínima:")
+    #print("Rutas con distancia mínima:")
     for iterator, route in enumerate(routes):
         distance = sum(calculate_distance(route[i], route[i+1]) for i in range(len(route)-1))
         if distance == min_distance:
-            print(f"\nRuta {iterator + 1}:")
+            #print(f"\nRuta {iterator + 1}:")
             ids_nodes = [str(node.id) for node in route]
-            print(" -> ".join(ids_nodes))
+            draw_text("Ruta: "+" -> ".join(ids_nodes), int(0.5 * (width - font_size * 0.5 * len("Ruta: "+" -> ".join(ids_nodes)))), int(height - 2 * font_size), font_size, ORANGE)
 
 
 def main():
@@ -183,7 +184,7 @@ def main():
     print("Ingrese datos:")
     quantity = int(input("Cantidad de nodos => "))
 
-    createNodes(width_window - node_radius, height_window, quantity, node_radius, WHITE)
+    createNodes(width_window * 0.6, height_window * 0.6, quantity, node_radius, WHITE)
 
     def_links()
 
@@ -193,12 +194,12 @@ def main():
     dijkstra(id_node_initial)
 
     view_nodes()
-    view_routes(id_node_final)
     
     init_window(width_window, height_window, "Algorithm Dijkstra") 
 
     while not window_should_close():
         begin_drawing()
+        view_routes(id_node_final, width_window, height_window)
         draw_links()
         draw_nodes()
         clear_background(BLACK)
