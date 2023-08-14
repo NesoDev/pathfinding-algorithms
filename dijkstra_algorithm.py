@@ -94,6 +94,16 @@ def def_links():
             node_adjacent = nodes[id - 1]
             node.nodes_adjacent.append(node_adjacent)
 
+def def_link_JSON():
+    json_data = load_json_data('nodes_position.json')
+    for item in json_data:
+        node_id = item["id"]
+        adjacent_ids = item.get("ids_adjacents", [])
+        node = next((n for n in nodes if n.id == node_id), None)
+        
+        if node:
+            node.nodes_adjacent = [n for n in nodes if n.id in adjacent_ids]
+
 def draw_links():
     font_size = 25 
     color_index = 0
@@ -185,7 +195,8 @@ def view_routes(id_node_final,width, height):
         if distance == min_distance:
             #print(f"\nRuta {iterator + 1}:")
             ids_nodes = [str(node.id) for node in route]
-            draw_text("Ruta: "+" -> ".join(ids_nodes), int(0.5 * (width - font_size * 0.5 * len("Ruta: "+" -> ".join(ids_nodes)))), int(height - 2 * font_size), font_size, ORANGE)
+            text_route = "Ruta mínima: "+" -> ".join(ids_nodes)
+            draw_text(text_route, int(0.5 * (width - font_size * 0.5 * len(text_route))), int(height - 2 * font_size), font_size, ORANGE)
 
 
 def main():
@@ -200,7 +211,8 @@ def main():
 
     createNodesFromJSON(node_radius, WHITE)
 
-    def_links()
+    #def_links()
+    def_link_JSON()
 
     id_node_initial = int(input("ID del nodo inicial => "))
     id_node_final = int(input("ID del nodo final => "))
