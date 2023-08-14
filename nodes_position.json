@@ -23,21 +23,21 @@
     {
         "id": 4,
         "pos_x": 250,
-        "pos_y": 180,
+        "pos_y": 280,
         "ids_adjacents": [1, 5, 7, 8]
     },
 
     {
         "id": 5,
-        "pos_x": 190,
-        "pos_y": 320,
-        "ids_adjacents": [1, 4, 8]
+        "pos_x": 310,
+        "pos_y": 400,
+        "ids_adjacents": [1, 4]
     },
 
     {
         "id": 6,
-        "pos_x": 200,
-        "pos_y": 510,
+        "pos_x": 250,
+        "pos_y": 520,
         "ids_adjacents": [1, 3, 8, 9]
     },
 
@@ -51,8 +51,8 @@
     {
         "id": 8,
         "pos_x": 500,
-        "pos_y": 395,
-        "ids_adjacents": [4, 5, 6, 10]
+        "pos_y": 400,
+        "ids_adjacents": [4, 6, 10, 11]
     },
 
     {

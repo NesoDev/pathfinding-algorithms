@@ -7,7 +7,7 @@ from pyray import *
 inf = float('inf')
 nodes = list()
 colors = [LIGHTGRAY, GRAY, DARKGRAY, YELLOW, GOLD, ORANGE, PINK, RED, MAROON, GREEN, LIME, DARKGREEN, SKYBLUE, BLUE, DARKBLUE, PURPLE, VIOLET, DARKPURPLE, BEIGE, BROWN, DARKBROWN,  WHITE,MAGENTA, RAYWHITE]
-
+selected_nodes = [None for node in nodes]
 class Node:
     def __init__(self, iterator, x, y, radius, color):
         self.id = iterator
@@ -23,6 +23,10 @@ class Node:
             if node != self and ((node.position[0] - self.position[0]) ** 2 + (node.position[1] - self.position[1]) ** 2) ** 0.5 <= 2 * self.radius:
                 return True
         return False
+    
+    def selected(self):
+        if (get_mouse_x() - self.position[0]) ** 2 + (get_mouse_y() - self.position[1]) ** 2 <= self.radius ** 2:
+            pass
 
 def load_json_data(filename):
     with open(filename, 'r') as json_file:
@@ -192,11 +196,14 @@ def view_routes(id_node_final,width, height):
     #print("Rutas con distancia mínima:")
     for iterator, route in enumerate(routes):
         distance = sum(calculate_distance(route[i], route[i+1]) for i in range(len(route)-1))
-        if distance == min_distance:
+        prev_routes = [routes[j] for j in range(0, iterator - 1)] if iterator > 0 else []
+        if distance == min_distance and not (route in prev_routes):
             #print(f"\nRuta {iterator + 1}:")
             ids_nodes = [str(node.id) for node in route]
             text_route = "Ruta mínima: "+" -> ".join(ids_nodes)
-            draw_text(text_route, int(0.5 * (width - font_size * 0.5 * len(text_route))), int(height - 2 * font_size), font_size, ORANGE)
+            draw_text(text_route, int(0.5 * (width - font_size * 0.5 * len(text_route))), int(height - (iterator + 1) * font_size), font_size, ORANGE)
+            #print(text_route)
+    #print(routes)
 
 
 def main():
