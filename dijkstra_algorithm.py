@@ -1,5 +1,6 @@
 import heapq
 import random
+import json
 
 from pyray import *
 
@@ -22,6 +23,17 @@ class Node:
             if node != self and ((node.position[0] - self.position[0]) ** 2 + (node.position[1] - self.position[1]) ** 2) ** 0.5 <= 2 * self.radius:
                 return True
         return False
+
+def load_json_data(filename):
+    with open(filename, 'r') as json_file:
+        data = json.load(json_file)
+    return data
+
+def createNodesFromJSON(radius, color):
+    json_data = load_json_data('nodes_position.json')
+    for item in json_data:
+        node = Node(item["id"], item["pos_x"], item["pos_y"], radius, color)
+        nodes.append(node)
 
 def createNodes(width, height, quantity, radius, color):
     for iterator in range(quantity):
@@ -181,10 +193,12 @@ def main():
     height_window = 800
     node_radius = 25
 
-    print("Ingrese datos:")
-    quantity = int(input("Cantidad de nodos => "))
+    #print("Ingrese datos:")
+    #quantity = int(input("Cantidad de nodos => "))
 
-    createNodes(width_window * 0.6, height_window * 0.6, quantity, node_radius, WHITE)
+    #createNodes(width_window * 0.6, height_window * 0.6, quantity, node_radius, WHITE)
+
+    createNodesFromJSON(node_radius, WHITE)
 
     def_links()
 
