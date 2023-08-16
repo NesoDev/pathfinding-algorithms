@@ -1,8 +1,10 @@
 import heapq
 import random
 import json
+import time
 
 from pyray import *
+from raylib import *
 
 inf = float('inf')
 nodes = list()
@@ -16,6 +18,7 @@ class Node:
         self.color = color
         self.nodes_adjacent = list()
         self.state = True
+        self.select = False
         self.labels = list()  # Lista de etiquetas [distance, node_ancestor, cycle]
 
     def detectCollision(self, nodes):
@@ -26,7 +29,9 @@ class Node:
     
     def selected(self):
         if (get_mouse_x() - self.position[0]) ** 2 + (get_mouse_y() - self.position[1]) ** 2 <= self.radius ** 2:
-            pass
+            self.select = True
+        else:
+            self.select = False
 
 def load_json_data(filename):
     with open(filename, 'r') as json_file:
@@ -181,8 +186,20 @@ def lesser_route(id_node_final, current_path=None, all_paths=None):
 
     return all_paths
 
-def view_routes(id_node_final,width, height):
+def view_routes(id_node_initial, width, height):
     font_size = 40
+    if is_mouse_button_down(MOUSE_BUTTON_LEFT):
+        for node in nodes:
+            node.selected()
+
+    for node in nodes:
+        if node.select == True:
+            id_node_final = node.id
+            break
+        else:
+            id_node_final = id_node_initial
+    
+
     routes = lesser_route(id_node_final)
     for route in routes:
         route.reverse()
@@ -222,17 +239,21 @@ def main():
     def_link_JSON()
 
     id_node_initial = int(input("ID del nodo inicial => "))
-    id_node_final = int(input("ID del nodo final => "))
+    #id_node_final = int(input("ID del nodo final => "))
 
+    t0 = time.time()
     dijkstra(id_node_initial)
+    tf = time.time()
+    print("------"+ str(tf - t0)+"----------")
 
-    view_nodes()
+    #view_nodes()
     
     init_window(width_window, height_window, "Algorithm Dijkstra") 
 
     while not window_should_close():
         begin_drawing()
-        view_routes(id_node_final, width_window, height_window)
+
+        view_routes(id_node_initial, width_window, height_window)
         draw_links()
         draw_nodes()
         clear_background(BLACK)
